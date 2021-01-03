@@ -30,6 +30,7 @@ class SinglyLinkedList {
         void addNodeAfterIndex();
         void addNodeAfterValue();
         void bulkAddNodes();
+        SinglyNode* returnHead();
 };
 
 void SinglyLinkedList :: create() {
@@ -37,6 +38,10 @@ void SinglyLinkedList :: create() {
     head->next = NULL;
     size = 0;
     cout << "Linked list Initialized.\n";
+}
+
+SinglyNode* SinglyLinkedList :: returnHead() {
+    return head;
 }
 
 void SinglyLinkedList :: initialize() {
@@ -222,6 +227,7 @@ class SinglyListHolder {
         void continueEditingList();
         void print();
         void printAllLists();
+        void mergeLists();
 };
 
 void SinglyListHolder :: create() {
@@ -239,6 +245,7 @@ void SinglyListHolder :: initialize() {
         cout << "\n3. Continue editing a list.";
         cout << "\n4. Print all list names.";
         cout << "\n5. Print all lists.";
+        cout << "\n6. Merge 2 lists.";
         cout << "\n99. Exit.\n\n>> ";
         cin >> menuOption;
 
@@ -256,6 +263,9 @@ void SinglyListHolder :: initialize() {
                 break;
             case 5:
                 printAllLists();
+                break;
+            case 6:
+                mergeLists();
                 break;
             case 99:
                 break;
@@ -370,6 +380,54 @@ void SinglyListHolder :: printAllLists() {
         temp = temp->next;
         cout << "\nPrinting : " << temp->name << endl;
         temp->node.print();
+    }
+}
+
+void SinglyListHolder :: mergeLists() {
+    print();
+    string name1, name2;
+    cout << "\nEnter names of lists you want to merge.\nList 1\n>> ";
+    cin >> name1;
+    cout << "\nList 2\n>> ";
+    cin >> name2;
+
+    SinglyListNode* temp1;
+    SinglyListNode* temp2;
+    temp1 = head;
+    temp2 = head;
+
+    bool found = false;
+    while (true) {
+        if (temp1->name == name1) {
+            found = true;
+            break;
+        } else temp1 = temp1->next;
+    }
+
+    if (!found) {
+        cout << "\nRecheck the name and try again!";
+        return;
+    } else {
+        found = false;
+        while (true) {
+            if (temp2->name == name2) {
+                found = true;
+                break;
+            } else temp2 = temp2->next;
+        }
+
+        if (!found) {
+            cout << "\nRecheck the name and try again!";
+            return;
+        } else {
+            SinglyNode* list1;
+            list1 = temp1->node.returnHead();
+
+            while(list1->next != NULL)
+                list1 = list1->next;
+
+            list1->next = temp2->node.returnHead()->next;
+        }
     }
 }
 
