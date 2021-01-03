@@ -218,6 +218,7 @@ class SinglyListHolder {
         void create();
         void initialize();
         void addList();
+        void deleteList();
         void continueEditingList();
         void print();
         void printAllLists();
@@ -244,6 +245,9 @@ void SinglyListHolder :: initialize() {
         switch(menuOption) {
             case 1:
                 addList();
+                break;
+            case 2:
+                deleteList();
                 break;
             case 3:
                 continueEditingList();
@@ -281,6 +285,41 @@ void SinglyListHolder :: addList() {
 
     newNode->node.create();
     newNode->node.initialize();
+}
+
+void SinglyListHolder :: deleteList() {
+    SinglyListNode* temp;
+    temp = head;
+
+    string name;
+    print();
+    cout << "\nEnter the name of list you want to delete.\n>> ";
+    cin >> name;
+
+    bool found = false;
+    
+    while (true) {
+        if (temp->name == name) {
+            found = true;
+            break;
+        } else if (temp->next == NULL) break;
+        else temp = temp->next;
+    }
+
+    if (!found) {
+        cout << "List with queried name doesn't exist!\n";
+        return;
+    } else {
+        if (temp == head) head = head->next;
+        else {
+            SinglyListNode* temp2;
+            temp2 = head;
+
+            while (temp2->next != temp) temp2 = temp2->next;
+            temp2->next = temp->next;
+        }
+        size--;
+    }
 }
 
 void SinglyListHolder :: print() {
