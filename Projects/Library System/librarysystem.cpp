@@ -83,9 +83,6 @@ class Library {
 	*/
 	private:
 		map<string, book> library;
-		set<string> authorSet; // set of authors for easier searching algorithms. Remember time > space
-		set<string> genreSet; // same for set of genres
-		// set<&book> bookSet;
 		vector<string> splitStrings(string, char);
 		string trimWhitespaces(string);
 		book& copyBookContents(book*);
@@ -193,7 +190,9 @@ void Library :: addBooks() {
 	cout << endl;
 	book* newBook = new book();
 	newBook->next = NULL;
+	
 	cin.ignore (std::numeric_limits<std::streamsize>::max(), '\n');
+
 	cout << "title: \n> ";
 	getline(cin, newBook->title);
 
@@ -231,12 +230,6 @@ void Library :: displayAllBooksUnique() {
 		book *traverse = &library[imap.first];
 		traverse = traverse->next;
 
-		// printElement("Id", 10);
-		// printElement("Title", 25);
-		// printElement("Author", 25);
-		// printElement("Copies", 8);
-		// printElement("Genre", 25);
-
 		while (traverse != NULL && !(find(printedIds.begin(), printedIds.end(), traverse->id) != printedIds.end())) {
 			cout << endl;
 			printElement(traverse->id, 10);
@@ -251,13 +244,6 @@ void Library :: displayAllBooksUnique() {
 	}
 
 	cout << endl;
-	// for (auto itr: bookSet) {
-	// 	printElement(itr.id, 10);
-	// 	printElement(itr.title, 25);
-	// 	printElement(itr.author, 25);
-	// 	printElement(itr.copies, 8);
-	// 	printElement(itr.genre, 25);
-	// }
 }
 
 void Library :: displayAllBooksByGenre() {
@@ -285,16 +271,6 @@ void Library :: displayAllBooksByGenre() {
 		}
 		cout << endl << endl << endl;
 	}
-
-	// cout << "\nPrinting Fiction books" << endl;
-	// book *traverse = &library["Epic Fantasy"];
-	// traverse = traverse->next;
-	// // cout << traverse->id << endl;
-	
-	// while (traverse != NULL) {
-	// 	cout << "Title: " << traverse->title << endl;
-	// 	traverse = traverse->next;
-	// }
 }
 
 
@@ -359,30 +335,11 @@ void Library :: buildLibraryFromFile() {
 			}
 		}
 	}
-
-	// cout << "\nPrinting all genres" << endl;
-	// for (auto const& imap: library) {
-	// 	cout << imap.first << endl;
-	// }
-
-	// cout << "\nPrinting Fiction books" << endl;
-	// book *traverse = &library["Epic Fantasy"];
-	// traverse = traverse->next;
-	// // cout << traverse->id << endl;
-	
-	// while (traverse != NULL) {
-	// 	cout << "Title: " << traverse->title << endl;
-	// 	traverse = traverse->next;
-	// }
 }
 
 int main(int argc, char const *argv[]) {
 	Library library;
 	library.init();
-	// library.buildLibraryFromFile();
-	// library.addBooks();
-	// library.displayAllBooksByGenre();
-	// library.displayAllBooksUnique();
 	return 0;
 }
 
