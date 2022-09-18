@@ -1,0 +1,23 @@
+id: 2364634
+title: 1984
+author: George Orwell
+genre: Fiction, Dystopia, Political Science
+copies: 10
+
+id: 1283616
+title: A Song of Ice and Fire
+author: George R. R. Martin
+genre: Epic Fantasy
+copies: 1034
+
+id: 8732461
+title: A Dance with Dragons
+author: George R. R. Martin
+genre: Novel, Fantasy Fiction
+copies: 2322
+
+id: 6531461
+title: The Lord of the Rings
+author: J. R. R. Tolkien
+genre: Fantasy Fiction, High fantasy, Adventure Fiction, Chivalric Romance, Heroic Fantasy
+copies: 4550
