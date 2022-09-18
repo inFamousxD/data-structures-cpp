@@ -89,11 +89,12 @@ class Library {
 		vector<string> splitStrings(string, char);
 		string trimWhitespaces(string);
 		book& copyBookContents(book*);
+		void processAndMapBook(book*);
 
 	public:
 		void init();
 		void addBooks();
-		void buildLibrary();
+		void buildLibraryFromFile();
 		void displayAllBooksByGenre();
 		void displayAllBooksUnique();
 		Library();
@@ -116,7 +117,35 @@ Library :: Library() {
 }
 
 void Library :: init() {
+	int choice = INT_MAX;
+	do {
+		cout << endl << "Select an Operation (Corresponding int): " << endl;
+		cout << "1. Add a book manually" << endl;
+		cout << "2. Build library by reading a file" << endl;
+		cout << "3. Display list of all books" << endl;
+		cout << "4. Display list of all books grouped by Genre" << endl;
+		cout << "[Input]> ";
+		cin  >> choice;
 
+		switch (choice) {
+			case 1:
+				addBooks();
+				break;
+			case 2:
+				buildLibraryFromFile();
+				break;
+			case 3:
+				displayAllBooksUnique();
+				break;
+			case 4:
+				displayAllBooksByGenre();
+				break;
+			
+			default:
+				cout << "Please enter a valid choice";
+				break;
+		}
+	} while(choice != 99);
 }
 
 string Library :: trimWhitespaces(string str) {
@@ -142,8 +171,50 @@ vector<string> Library :: splitStrings(string str, char delimiter) {
 	return v;
 }
 
+void Library :: processAndMapBook(book* newBook) {
+	vector<string> processedGenre = splitStrings(newBook->genre, ',');
+	cout << processedGenre;
+	book *copiedBook = &copyBookContents(newBook);				
+	// bookSet.insert(*copiedBook);
+	for (auto genre = processedGenre.begin(); genre != processedGenre.end(); ++genre) {
+		if (library.find(*genre) == library.end()) {
+			book *emptyHead = new book();
+			emptyHead->next = copiedBook;
+			library[*genre] = *emptyHead;
+		} else {
+			book *traverse = &library[*genre];
+			while (traverse->next != NULL) traverse = traverse->next;
+			traverse->next = copiedBook;
+		}
+	}
+}
+
+void Library :: addBooks() {
+	cout << endl;
+	book* newBook = new book();
+	newBook->next = NULL;
+	cin.ignore (std::numeric_limits<std::streamsize>::max(), '\n');
+	cout << "title: \n> ";
+	getline(cin, newBook->title);
+
+	cout << "author: \n> ";
+	getline(cin, newBook->author);
+
+	cout << "genre (comma seperated multiple entries are allowed): \n> ";
+	getline(cin, newBook->genre);
+
+	cin.sync();
+
+	cout << "copies: \n> ";
+	cin >> newBook->copies;
+
+	newBook->id = rand() % (9000000 - 1000000 + 1) + 1000000;
+
+	processAndMapBook(newBook);
+}
+
 void Library :: displayAllBooksUnique() {
-	cout << "\nPrinting all books" << endl;
+	cout << "\nPrinting all books regardless of genre" << endl;
 	printElement("Id", 10);
 	printElement("Title", 25);
 	printElement("Author", 25);
@@ -242,7 +313,7 @@ void Library :: displayAllBooksByGenre() {
 	title: AAA
 	...
 */
-void Library :: buildLibrary() {
+void Library :: buildLibraryFromFile() {
 	ifstream filereader;
 	vector<string> lines;
 	string line;
@@ -263,27 +334,12 @@ void Library :: buildLibrary() {
 
 	for (auto i = lines.begin(); i != lines.end(); ++i) {
 		if (*i == "") {
-			cout << endl;
-
 			if (newBook->id != 0) {
-				vector<string> processedGenre = splitStrings(newBook->genre, ',');
-				cout << processedGenre;
-				book *copiedBook = &copyBookContents(newBook);				
-				// bookSet.insert(*copiedBook);
-				for (auto genre = processedGenre.begin(); genre != processedGenre.end(); ++genre) {
-					if (library.find(*genre) == library.end()) {
-						book *emptyHead = new book();
-						emptyHead->next = copiedBook;
-						library[*genre] = *emptyHead;
-					} else {
-						book *traverse = &library[*genre];
-						while (traverse->next != NULL) traverse = traverse->next;
-						traverse->next = copiedBook;
-					}
-				}
+				processAndMapBook(newBook);
 			}
 
 			newBook = new book();
+			cout << endl;
 		} else {
 			vector<string> processedLine = splitStrings(*i, ':');
 			cout << "type: " << processedLine[0] << ", value: " << processedLine[1] << endl;
@@ -322,9 +378,11 @@ void Library :: buildLibrary() {
 
 int main(int argc, char const *argv[]) {
 	Library library;
-	library.buildLibrary();
-	library.displayAllBooksByGenre();
-	library.displayAllBooksUnique();
+	library.init();
+	// library.buildLibraryFromFile();
+	// library.addBooks();
+	// library.displayAllBooksByGenre();
+	// library.displayAllBooksUnique();
 	return 0;
 }
 
