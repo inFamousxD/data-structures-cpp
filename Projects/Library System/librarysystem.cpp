@@ -85,7 +85,7 @@ class Library {
 		map<string, book> library;
 		set<string> authorSet; // set of authors for easier searching algorithms. Remember time > space
 		set<string> genreSet; // same for set of genres
-		// set<map<str> bookSet;
+		// set<&book> bookSet;
 		vector<string> splitStrings(string, char);
 		string trimWhitespaces(string);
 		book& copyBookContents(book*);
@@ -95,7 +95,7 @@ class Library {
 		void addBooks();
 		void buildLibrary();
 		void displayAllBooksByGenre();
-		void displayAllBooks();
+		void displayAllBooksUnique();
 		Library();
 };
 
@@ -142,7 +142,7 @@ vector<string> Library :: splitStrings(string str, char delimiter) {
 	return v;
 }
 
-void Library :: displayAllBooks() {
+void Library :: displayAllBooksUnique() {
 	cout << "\nPrinting all books" << endl;
 	printElement("Id", 10);
 	printElement("Title", 25);
@@ -150,6 +150,36 @@ void Library :: displayAllBooks() {
 	printElement("Copies", 8);
 	printElement("Genre", 25);
 
+	// Tried using set but could not get it to work, so will try a visited vector and only print if the id isn't in the vector. After printing, add the id 
+	// to vector visited
+
+	vector<unsigned long int> printedIds;
+
+	// Printing all books regardless of Genre, once.
+	for (auto const& imap: library) {
+		book *traverse = &library[imap.first];
+		traverse = traverse->next;
+
+		// printElement("Id", 10);
+		// printElement("Title", 25);
+		// printElement("Author", 25);
+		// printElement("Copies", 8);
+		// printElement("Genre", 25);
+
+		while (traverse != NULL && !(find(printedIds.begin(), printedIds.end(), traverse->id) != printedIds.end())) {
+			cout << endl;
+			printElement(traverse->id, 10);
+			printElement(traverse->title, 25);
+			printElement(traverse->author, 25);
+			printElement(traverse->copies, 8);
+			printElement(traverse->genre, 25);
+			printedIds.push_back(traverse->id);
+			traverse = traverse->next;
+		}
+
+	}
+
+	cout << endl;
 	// for (auto itr: bookSet) {
 	// 	printElement(itr.id, 10);
 	// 	printElement(itr.title, 25);
@@ -294,7 +324,7 @@ int main(int argc, char const *argv[]) {
 	Library library;
 	library.buildLibrary();
 	library.displayAllBooksByGenre();
-	// library.displayAllBooks();
+	library.displayAllBooksUnique();
 	return 0;
 }
 
